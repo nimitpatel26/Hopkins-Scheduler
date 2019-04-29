@@ -1,0 +1,75 @@
+<html>
+<head>
+	<style>
+		nav, .form {margin-bottom: 50px;}
+		.form-group {margin: 10px 0;}
+		input.form-control {margin: 0 10px;}
+	</style>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<script type='text/javascript'>
+		$('document').ready(function() {
+			$('.form').on('keyup', 'input:first-child', function(e) {
+				if(e.key != 'Tab' && $(this).parent()[0] === $(this).parents('.form').find('.row:last-child')[0]) {
+					var newRow = $(this).parent().clone();
+					newRow.find('input').val('');
+					$(this).parents('.form').append(newRow);
+				}
+			});
+
+			$('.form').on('focusout', 'input:first-child', function() {
+				if(!$(this).val() && !$(this).parent().is(':last-child') && $(this).parents('.form').find('.row').length > 1)
+					$(this).parent().remove();
+
+				var types = '<option>Choose person type...';
+				$('.personType .row input:first-child').each(function() {
+					if($(this).val())
+						types += '<option>' + $(this).val() + '</option>';
+				});
+
+				$('.people .row select').each(function() {
+					var val = $(this).val();
+					$(this).html(types);
+					$(this).val(val);
+				})
+			});
+		});		
+	</script>
+</head>
+<body>
+	<nav class='navbar navbar-dark bg-dark'>
+		<div class='container'>
+			<h1 class='text-white'>Hopkins Scheduler</h1>
+			<div>
+				<button type="button" class="btn btn-outline-info">Upload .json</button>
+				<button style='margin-left: 20px' type="button" class="btn btn-outline-success">Download .json</button>
+			</div>
+		</div>
+	</nav>
+
+	<div class='container'>
+		<div class='form personType'>
+			<h2>PersonType</h2>
+			<div class='form-group row'>
+				<input class='form-control col-3' placeholder="Add person type">
+				<input class='form-control col-3' placeholder="Required hours">
+				<input class='form-control col-3' placeholder="Location">
+			</div>
+		</div>
+		<div class='form people'>
+			<h2>People</h2>
+			<div class='form-group row'>
+				<input class='form-control col-3' placeholder="Add person">
+				<select class='form-control col-3'>
+					<option>Choose person type...</option>
+				</select>
+				<input class='form-control col-3' placeholder="Hours worked">
+			</div>
+		</div>
+	</div>
+</body>
+</html>
