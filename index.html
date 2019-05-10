@@ -18,11 +18,31 @@
 		<div class='container'>
 			<h1 class='text-white'>Hopkins Scheduler</h1>
 			<div>
-				<button id='upload-btn' type="button" class="btn btn-outline-info">Upload .json</button>
+				<button data-target="#uploadJson" data-toggle="modal" type="button" class="btn btn-outline-info">Upload .json</button>
 				<button id='download-btn' style='margin-left: 20px' type="button" class="btn btn-outline-success">Download .json</button>
 			</div>
 		</div>
 	</nav>
+
+	<div class="modal fade" id="uploadJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Upload JSON</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      		<textarea class="form-control" id="uploadText" rows="10" placeholder="Copy and paste the JSON from the old 'scheduler_settings.json' to make changes..."></textarea>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button id="upload-btn" type="button" class="btn btn-primary" data-dismiss="modal">Upload</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 	<div class='container'>
 		<div id='locations' class='form'>

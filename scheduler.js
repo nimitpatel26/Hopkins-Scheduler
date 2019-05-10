@@ -100,4 +100,40 @@ $('document').ready(function() {
 		
 		download("scheduler_settings.json", JSON.stringify(settingsObj));
 	});
+
+	$("#upload-btn").click(function() {
+		var settingsObj = {};
+		try {
+			settingsObj = JSON.parse($('#uploadText').val());
+		} catch(err) {
+			alert('Invalid JSON');
+			return;
+		}
+
+		for(var i = 0; i < settingsObj.locations.length; ++i) {
+			$('#locations .row:last-child input').val(settingsObj.locations[i]);
+			$('#locations .row:last-child input').trigger('change');
+		}
+
+		for(var i = 0; i < settingsObj.personTypes.length; ++i) {
+			$('#personTypes .row:last-child .first').val(settingsObj.personTypes[i][0]);
+			$('#personTypes .row:last-child .reqHours').val(settingsObj.personTypes[i][1]);
+			$('#personTypes .row:last-child .locationName').val(settingsObj.personTypes[i][2]);
+			$('#personTypes .row:last-child .first').trigger('change');
+		}
+
+		for(var i = 0; i < settingsObj.people.length; ++i) {
+			$('#people .row:last-child .first').val(settingsObj.people[i][0]);
+			$('#people .row:last-child .myType').val(settingsObj.people[i][1]);
+			$('#people .row:last-child .workedHours').val(settingsObj.people[i][2]);
+			$('#people .row:last-child .first').trigger('change');
+		}
+
+		for(var i = 0; i < settingsObj.shiftTypes.length; ++i) {
+			$('#shiftTypes .row:last-child .first').val(settingsObj.shiftTypes[i][0]);
+			$('#shiftTypes .row:last-child .myType').val(settingsObj.shiftTypes[i][1]);
+			$('#shiftTypes .row:last-child .dates').val(settingsObj.shiftTypes[i][2]);
+			$('#shiftTypes .row:last-child .first').trigger('change');
+		}
+	});
 });
