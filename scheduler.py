@@ -3,6 +3,7 @@ from __future__ import print_function
 from ortools.sat.python import cp_model
 import itertools
 import ReadData
+import WriteData
 
 class Shift:
     def __init__(self, startTime, endTime):
@@ -54,9 +55,17 @@ class NursesPartialSolutionPrinter(cp_model.CpSolverSolutionCallback):
 
     def on_solution_callback(self):
         if self._solution_count in self._solutions:
+            solutions = {}
+            indxSol = 'Solution %i' % (self._solution_count + 1)
+            days = {}
+
             print('Solution %i' % (self._solution_count + 1))
             print('===========')
             for d in range(self._num_days):
+
+
+                indxDays = 'Day #%i' % d
+                tmpList = []
                 print('Day #%i' % d)
                 for h in range(self._num_hours):
                     is_working = False
@@ -64,8 +73,13 @@ class NursesPartialSolutionPrinter(cp_model.CpSolverSolutionCallback):
                         if self.Value(self._shifts[(n, d, h)]):
                             is_working = True
                             print('  %02i:00 - %s' % (h, self._nurse_names[self._nurse_num[n]]))
+                            tmpList = tmpList + [h, self._nurse_names[self._nurse_num[n]]]
+
                     if not is_working:
                         print('  Shift {} is vacant.'.format(n))
+                days[indxDays] = tmpList
+            solutions[indxSol] = days
+            WriteData.writeData(solutions)
             print()
             self._solution_count += 1
 
@@ -75,30 +89,31 @@ class NursesPartialSolutionPrinter(cp_model.CpSolverSolutionCallback):
 def main():
     # Data.
 
-    locations = ReadData.setupData()
+    # locations = ReadData.setupData()
+    #
+    # nurse_names = []
+    # nurses = []
+    # nurse_req_hours = []
+    # for i in locations:
+        # print("\n--------------------")
+        # print(i)
+        # print("--------------------\n")
+        # nurse_names, nurses, nurse_req_hours = ReadData.getData(i)
+        # print("nurse_names = " + str(nurse_names))
+        # print("nurses = " + str(nurses))
+        # print("nurse_req_hours = " + str(nurse_req_hours))
 
-    for i in locations:
-        print("\n--------------------")
-        print(i)
-        print("--------------------\n")
-        nurse_names, nurses, nurse_req_hours = ReadData.getData(i)
-        print("nurse_names = " + str(nurse_names))
-        print("nurses = " + str(nurses))
-        print("nurse_req_hours = " + str(nurse_req_hours))
-
-    # nurse_names = ['Jefferson Steelflex', 'Robert Yakatori', 'Anne Parker', 'Sam Greenwich', 'PRN']
-    # nurses = [[10], [9], [10], [8], [8, 10]]
-    # nurse_req_hours = [[40, 40], [36, 36], [30, 30], [24, 24], [0, 10000000000000]]
-
-
-
-
-
+    nurse_names = ['Jefferson Steelflex', 'Robert Yakatori', 'Anne Parker', 'Sam Greenwich', 'PRN']
+    nurses = [[10], [9], [10], [8], [8, 10]]
+    nurse_req_hours = [[40, 40], [36, 36], [30, 30], [24, 24], [0, 10000000000000]]
 
 
+    # val = input("Enter something: ")
 
 
-    val = input("Enter something: ")
+
+
+
     num_days = 7
     num_hours = 24
 

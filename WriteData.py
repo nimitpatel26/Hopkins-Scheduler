@@ -8,12 +8,12 @@ def writeToJSONFile(path, fileName, data):
 
 
 
-def main():
+def writeData(data):
     # Example
-    data = {}
-    data['key'] = 'value2'
 
-    writeToJSONFile('./','file-name',data)
+
+    writeToJSONFile('./','output',data)
     # './' represents the current directory so the directory save-file.py is in
 
-main()
+def printData(data):
+    print(data)
