@@ -94,7 +94,9 @@ $('document').ready(function() {
 								settingsObj.requestOff[name] = [];
 
 							settingsObj.requestOff[name].push($(this).find('.constraintDate').val());
-						} else {
+						} 
+
+						if($(this).find('.onOff').val() == "Requests to work") {
 							if(!settingsObj.requestOn[name])
 								settingsObj.requestOn[name] = [];
 
@@ -104,7 +106,7 @@ $('document').ready(function() {
 				});
 			}
 		});	
-
+		console.log(settingsObj);
 		settingsObj.shiftTypes = [];
 		$('#shiftTypes .row').each(function() {
 			var first = $(this).find('.first');
