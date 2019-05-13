@@ -103,15 +103,14 @@
 		<div id='constraints' class='form'>
 			<h2>Constraints</h2>
 			<div data-source='constraints' class='form-group row'>
-				<select data-target='personType people' class='first form-control col-3' data-default='Choose constraint target...'>
-						<option>Choose constraint target...</option>
+				<select data-target='people' class='first form-control col-3 constraintPerson' data-default='Choose constraint target...'>
+					<option>Choose constraint target...</option>
 				</select>
-				<select class='form-control col-3'>
-
+				<select class='form-control col-3 onoff'>
+					<option>Requests off</option>
+					<option>Requests to work</option>
 				</select>
-				<select class='form-control col-3'>
-
-				</select>
+				<input class='form-control col-3 constraintDate' placeholder="Enter day">
 			</div>
 		</div>
 	</div>

@@ -78,12 +78,30 @@ $('document').ready(function() {
 		});
 
 		settingsObj.people = [];
+		settingsObj.requestOff = [];
+		settingsObj.requestOn = [];
 		$('#people .row').each(function() {
 			if($(this).find('.first').val()) {
 				var name = $(this).find('.first').val();
 				var type = $(this).find('.myType').val();
 				var workedHours = $(this).find('.workedHours').val();
 				settingsObj.people.push([name, type, workedHours]);
+
+				$('#constraints .row').each(function() {
+					if($(this).find('.first').val() == name) {
+						if($(this).find('.onOff').val() == 'Requests off') {
+							if(!settingsObj.requestOff[name])
+								settingsObj.requestOff[name] = [];
+
+							settingsObj.requestOff[name].push($(this).find('.constraintDate').val());
+						} else {
+							if(!settingsObj.requestOn[name])
+								settingsObj.requestOn[name] = [];
+
+							settingsObj.requestOn[name].push($(this).find('.constraintDate').val());
+						}
+					}
+				});
 			}
 		});	
 
@@ -97,7 +115,7 @@ $('document').ready(function() {
 				settingsObj.shiftTypes.push([length, type, dates]);
 			}
 		});
-		
+
 		download("scheduler_settings.json", JSON.stringify(settingsObj));
 	});
 
