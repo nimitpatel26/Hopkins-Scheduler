@@ -208,7 +208,6 @@ def getData(locationName):
         local_person_types = local_person_types + [person_types[i]]
         local_people = local_people + people[i]
 
-        print(range(len(people[i])))
         for j in range(len(people[i])):
 
             local_hours_req = local_hours_req + [[hours_req[i][j]]]
@@ -220,14 +219,14 @@ def getData(locationName):
             local_req_on = local_req_on + [req_on[i][j]]
             local_req_off = local_req_off + [req_off[i][j]]
 
-    # print("\nreq_on = " + str(local_req_on))
+
     tmp_req_on = []
     for i in range(len(local_req_on)):
         for j in range(len(local_req_on[i])):
             data = local_req_on[i][j]
             if (data != []):
                 tmp_req_on = tmp_req_on + [[i, local_req_on[i][j]]]
-    # print("\ntmp_req_on = " + str(tmp_req_on))
+
     local_req_on = tmp_req_on
 
     # print("\nreq_on = " + str(local_req_on))
@@ -237,8 +236,41 @@ def getData(locationName):
             data = local_req_off[i][j]
             if (data != []):
                 tmp_req_off = tmp_req_off + [[i, local_req_off[i][j]]]
-    # print("\ntmp_req_on = " + str(tmp_req_on))
+
     local_req_off = tmp_req_off
+
+    ######################################
+    days_req_off = local_req_off
+    days_req_on = local_req_on
+    ######################################
+
+    tmp_req_on = []
+    for i in local_req_on:
+        base = i
+        tmp_list = []
+        #print (i)
+        for j in range(0, 24):
+            tmp_list = tmp_list + [base + [j]]
+        tmp_req_on = tmp_req_on + tmp_list
+    #print("\ntmp_req_on = " + str(tmp_req_on))
+    local_req_on = tmp_req_on
+
+    tmp_req_off = []
+    for i in local_req_off:
+        base = i
+        tmp_list = []
+        #print (i)
+        for j in range(0, 24):
+            tmp_list = tmp_list + [base + [j]]
+        tmp_req_off = tmp_req_off + tmp_list
+    #print("\ntmp_req_on = " + str(tmp_req_on))
+    local_req_off = tmp_req_off
+
+    ######################################
+    hourly_req_off = local_req_off
+    hourly_req_on = local_req_on
+    ######################################
+
 
     # print("\nreq_on: = " + str(local_req_on))
     # print("\nreq_off: = " + str(local_req_off))
@@ -254,7 +286,7 @@ def getData(locationName):
     #
     # print("\nshift_len = " + str(local_shift_len) + "\n")
 
-    return local_people, local_shift_len, local_hours_rem, local_req_on, local_req_off
+    return local_people, local_shift_len, local_hours_rem, local_req_on, local_req_off, days_req_on, days_req_off
 
 def Diff(li1, li2):
 

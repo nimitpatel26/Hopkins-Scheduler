@@ -98,16 +98,16 @@ def main():
         print("\n--------------------")
         print(i)
         print("--------------------\n")
-        nurse_names, nurses, nurse_req_hours, requested_on, requested_off = ReadData.getData(i)
+        nurse_names, nurses, nurse_req_hours, requested_on, requested_off, requested_on_days, requested_off_days = ReadData.getData(i)
         print("nurse_names = " + str(nurse_names))
         print("nurses = " + str(nurses))
         print("nurse_req_hours = " + str(nurse_req_hours))
         print("requested_on = " + str(requested_on))
         print("requested_off = " + str(requested_off))
 
-    nurse_names = ['Jefferson Steelflex', 'Robert Yakatori', 'Anne Parker', 'Sam Greenwich', 'PRN']
-    nurses = [[10], [9], [10], [8], [8, 10]]
-    nurse_req_hours = [[40, 40], [36, 36], [30, 30], [24, 24], [0, 10000000000000]]
+    # nurse_names = ['Jefferson Steelflex', 'Robert Yakatori', 'Anne Parker', 'Sam Greenwich', 'PRN']
+    # nurses = [[10], [9], [10], [8], [8, 10]]
+    # nurse_req_hours = [[40, 40], [36, 36], [30, 30], [24, 24], [0, 10000000000000]]
 
 
     val = input("Enter something: ")
