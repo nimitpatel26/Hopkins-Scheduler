@@ -10,6 +10,8 @@ global hours_req
 global hours_wrk
 global hours_rem
 global shift_len
+global req_on
+global req_off
 
 '''
 Printing locations
@@ -55,7 +57,7 @@ Printing shiftTypes
 
 
 '''
-
+#def main():
 def setupData():
 
     global main_data
@@ -66,6 +68,9 @@ def setupData():
     global hours_wrk
     global hours_rem
     global shift_len
+    global req_on
+    global req_off
+
     locations = []
     person_types = []
     people = []
@@ -73,6 +78,8 @@ def setupData():
     hours_wrk = []
     hours_rem = []
     shift_len = []
+    req_on = []
+    req_off = []
 
     with open('scheduler_settings.json') as json_file:
         data = json.load(json_file)
@@ -106,6 +113,45 @@ def setupData():
         shift_len[personTypeIndex] = shift_len[personTypeIndex] + [int(i[0])]
 
 
+
+
+
+    req_off = [[]] * len(person_types)
+    for i in range(len(req_off)):
+        req_off[i] = [[]] * len(people[i])
+
+    #print("\nreq_off = " + str(req_off))
+    #print("\nPrinting resquest off:")
+    for i in main_data['requestOff']:
+        #print(str(i) + ": " + str(main_data['requestOff'][i]))
+        personTypeIndex, personIndex = findIndexes(i)
+        #print(str(i) + " is at index " + str(personTypeIndex) + " and " + str(personIndex))
+        for j in main_data['requestOff'][i]:
+            daysoff = getDays(j)
+            req_off[personTypeIndex][personIndex] = req_off[personTypeIndex][personIndex] + daysoff
+
+
+    req_on = [[]] * len(person_types)
+    for i in range(len(req_on)):
+        req_on[i] = [[]] * len(people[i])
+
+    # print("\nreq_on = " + str(req_on))
+    # print("\nPrinting resquest on:")
+    for i in main_data['requestOn']:
+        # print(str(i) + ": " + str(main_data['requestOn'][i]))
+        personTypeIndex, personIndex = findIndexes(i)
+        # print(str(i) + " is at index " + str(personTypeIndex) + " and " + str(personIndex))
+        for j in main_data['requestOn'][i]:
+            dayson = getDays(j)
+            req_on[personTypeIndex][personIndex] = req_on[personTypeIndex][personIndex] + dayson
+
+
+    # print("\nprinting req_on:")
+    # req_on = [[]] * len(person_types)
+    # for i in main_data['requestOn']:
+    #     personTypeIndex = person_types.index(i[1][0])
+
+
     print("\n--------------------")
     print("ALL DATA")
     print("--------------------\n")
@@ -118,8 +164,12 @@ def setupData():
     print("hours_wrk = " + str(hours_wrk))
     print("hours_rem = " + str(hours_rem))
 
-    print("\nshift_len = " + str(shift_len) + "\n")
+    print("\nshift_len = " + str(shift_len))
 
+    print("\nreq_off = " + str(req_off))
+    print("req_on = " + str(req_on) + "\n")
+
+    # getData(locations[0])
 
     return locations
 
@@ -133,6 +183,8 @@ def getData(locationName):
     global hours_wrk
     global hours_rem
     global shift_len
+    global req_on
+    global req_off
 
     local_locations = locationName
     local_person_types = []
@@ -141,6 +193,8 @@ def getData(locationName):
     local_hours_wrk = []
     local_hours_rem = []
     local_shift_len = []
+    local_req_on = []
+    local_req_off = []
 
     peopleWrkAtLocation = []
 
@@ -148,10 +202,13 @@ def getData(locationName):
         if (main_data['personTypes'][i][2] == locationName):
             peopleWrkAtLocation = peopleWrkAtLocation + [i]
 
+
     for i in peopleWrkAtLocation:
 
         local_person_types = local_person_types + [person_types[i]]
         local_people = local_people + people[i]
+
+        print(range(len(people[i])))
         for j in range(len(people[i])):
 
             local_hours_req = local_hours_req + [[hours_req[i][j]]]
@@ -160,6 +217,31 @@ def getData(locationName):
             local_shift_len = local_shift_len + [shift_len[i]]
 
 
+            local_req_on = local_req_on + [req_on[i][j]]
+            local_req_off = local_req_off + [req_off[i][j]]
+
+    # print("\nreq_on = " + str(local_req_on))
+    tmp_req_on = []
+    for i in range(len(local_req_on)):
+        for j in range(len(local_req_on[i])):
+            data = local_req_on[i][j]
+            if (data != []):
+                tmp_req_on = tmp_req_on + [[i, local_req_on[i][j]]]
+    # print("\ntmp_req_on = " + str(tmp_req_on))
+    local_req_on = tmp_req_on
+
+    # print("\nreq_on = " + str(local_req_on))
+    tmp_req_off = []
+    for i in range(len(local_req_off)):
+        for j in range(len(local_req_off[i])):
+            data = local_req_off[i][j]
+            if (data != []):
+                tmp_req_off = tmp_req_off + [[i, local_req_off[i][j]]]
+    # print("\ntmp_req_on = " + str(tmp_req_on))
+    local_req_off = tmp_req_off
+
+    # print("\nreq_on: = " + str(local_req_on))
+    # print("\nreq_off: = " + str(local_req_off))
     # print("\n\n---------------------------")
     # print("locations = " + str(local_locations))
     # print("---------------------------\n")
@@ -172,11 +254,7 @@ def getData(locationName):
     #
     # print("\nshift_len = " + str(local_shift_len) + "\n")
 
-    return local_people, local_shift_len, local_hours_rem
-    # nurse_names = copy.deepcopy(local_people)
-    # nurses = copy.deepcopy(local_shift_len)
-    # nurse_req_hours = copy.deepcopy(local_hours_rem)
-
+    return local_people, local_shift_len, local_hours_rem, local_req_on, local_req_off
 
 def Diff(li1, li2):
 
@@ -184,3 +262,37 @@ def Diff(li1, li2):
     for i in range(len(li1)):
         tmp = tmp + [li1[i] - li2[i]]
     return tmp
+
+def findIndexes(name):
+
+    global people
+
+    mainIndex = 0
+    innerIndex = 0
+
+    for i in people:
+        innerIndex = 0
+        for j in i:
+            if (name == j):
+                return mainIndex, innerIndex
+
+            innerIndex = innerIndex + 1
+        mainIndex = mainIndex + 1
+
+def getDays(days):
+    stripString = lambda x: int(x.strip())
+
+
+    if (days.find("-") != -1):
+        tmp = days.split("-")
+        tmpList = list(range(int(tmp[0]), int(tmp[1])))
+        return tmpList
+
+    if (days.find(",") != -1):
+        tmp = days.split(",")
+        tmpList = list(map(stripString, tmp))
+        return tmpList
+
+    return [int(days)]
+
+#main()
