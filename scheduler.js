@@ -78,35 +78,30 @@ $('document').ready(function() {
 		});
 
 		settingsObj.people = [];
-		settingsObj.requestOff = [];
-		settingsObj.requestOn = [];
+		settingsObj.requestOff = {};
+		settingsObj.requestOn = {};
 		$('#people .row').each(function() {
 			if($(this).find('.first').val()) {
 				var name = $(this).find('.first').val();
 				var type = $(this).find('.myType').val();
 				var workedHours = $(this).find('.workedHours').val();
 				settingsObj.people.push([name, type, workedHours]);
+				settingsObj.requestOff[name] = [];
+				settingsObj.requestOn[name] = [];
 
 				$('#constraints .row').each(function() {
 					if($(this).find('.first').val() == name) {
-						if($(this).find('.onOff').val() == 'Requests off') {
-							if(!settingsObj.requestOff[name])
-								settingsObj.requestOff[name] = [];
-
+						if($(this).find('.onOff').val() == 'Requests off')
 							settingsObj.requestOff[name].push($(this).find('.constraintDate').val());
-						} 
 
-						if($(this).find('.onOff').val() == "Requests to work") {
-							if(!settingsObj.requestOn[name])
-								settingsObj.requestOn[name] = [];
-
+						if($(this).find('.onOff').val() == "Requests to work") 
 							settingsObj.requestOn[name].push($(this).find('.constraintDate').val());
-						}
+	
 					}
 				});
 			}
 		});	
-		console.log(settingsObj);
+
 		settingsObj.shiftTypes = [];
 		$('#shiftTypes .row').each(function() {
 			var first = $(this).find('.first');
