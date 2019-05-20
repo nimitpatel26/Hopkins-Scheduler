@@ -78,6 +78,7 @@ $('document').ready(function() {
 		});
 
 		settingsObj.people = [];
+        settingsObj.mustOff = {};
 		settingsObj.requestOff = {};
 		settingsObj.requestOn = {};
 		$('#people .row').each(function() {
@@ -86,17 +87,20 @@ $('document').ready(function() {
 				var type = $(this).find('.myType').val();
 				var workedHours = $(this).find('.workedHours').val();
 				settingsObj.people.push([name, type, workedHours]);
+                settingsObj.mustOff[name] = [];
 				settingsObj.requestOff[name] = [];
 				settingsObj.requestOn[name] = [];
 
 				$('#constraints .row').each(function() {
 					if($(this).find('.first').val() == name) {
-						if($(this).find('.onOff').val() == 'Requests off')
+                        if($(this).find('.onOff').val() == 'Scheduled off')
+							settingsObj.mustOff[name].push($(this).find('.constraintDate').val());
+                        
+						if($(this).find('.onOff').val() == 'Requests not to work')
 							settingsObj.requestOff[name].push($(this).find('.constraintDate').val());
 
 						if($(this).find('.onOff').val() == "Requests to work") 
 							settingsObj.requestOn[name].push($(this).find('.constraintDate').val());
-	
 					}
 				});
 			}
@@ -112,7 +116,13 @@ $('document').ready(function() {
 				settingsObj.shiftTypes.push([length, type, dates]);
 			}
 		});
-
+        
+        settingsObj.numDays = 0;
+        $('#numDays input').each(function() {
+			if($(this).val())
+				settingsObj.numDays = $(this).val();
+		});
+        
 		download("scheduler_settings.json", JSON.stringify(settingsObj));
 	});
 

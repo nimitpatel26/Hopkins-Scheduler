@@ -68,8 +68,10 @@ def setupData():
     global hours_wrk
     global hours_rem
     global shift_len
+    global must_off
     global req_on
     global req_off
+    global num_days
 
     locations = []
     person_types = []
@@ -78,6 +80,7 @@ def setupData():
     hours_wrk = []
     hours_rem = []
     shift_len = []
+    must_off = []
     req_on = []
     req_off = []
 
@@ -87,7 +90,8 @@ def setupData():
 
     main_data = data
     locations = main_data['locations']
-
+    num_days = int(main_data['numDays'])
+    
     for i in main_data['personTypes']:
         person_types = person_types + [i[0]]
 
@@ -144,6 +148,21 @@ def setupData():
         for j in main_data['requestOn'][i]:
             dayson = getDays(j)
             req_on[personTypeIndex][personIndex] = req_on[personTypeIndex][personIndex] + dayson
+            
+            
+    must_off = [[]] * len(person_types)
+    for i in range(len(must_off)):
+        must_off[i] = [[]] * len(people[i])
+
+    # print("\nmust_off = " + str(must_off))
+    # print("\nPrinting must off:")
+    for i in main_data['mustOff']:
+        # print(str(i) + ": " + str(main_data['requestOn'][i]))
+        personTypeIndex, personIndex = findIndexes(i)
+        # print(str(i) + " is at index " + str(personTypeIndex) + " and " + str(personIndex))
+        for j in main_data['mustOff'][i]:
+            daysmustoff = getDays(j)
+            must_off[personTypeIndex][personIndex] = must_off[personTypeIndex][personIndex] + daysmustoff
 
 
     # print("\nprinting req_on:")
@@ -165,7 +184,7 @@ def setupData():
     print("hours_rem = " + str(hours_rem))
 
     print("\nshift_len = " + str(shift_len))
-
+    print("\nmust_off = " + str(must_off))
     print("\nreq_off = " + str(req_off))
     print("req_on = " + str(req_on) + "\n")
 
@@ -183,9 +202,11 @@ def getData(locationName):
     global hours_wrk
     global hours_rem
     global shift_len
+    global must_off
     global req_on
     global req_off
-
+    global num_days
+    
     local_locations = locationName
     local_person_types = []
     local_people = []
@@ -193,6 +214,7 @@ def getData(locationName):
     local_hours_wrk = []
     local_hours_rem = []
     local_shift_len = []
+    local_must_off = []
     local_req_on = []
     local_req_off = []
 
@@ -215,7 +237,7 @@ def getData(locationName):
             local_hours_rem = local_hours_rem + [[hours_rem[i][j], hours_rem[i][j]]]
             local_shift_len = local_shift_len + [shift_len[i]]
 
-
+            local_must_off = local_must_off + [must_off[i][j]]
             local_req_on = local_req_on + [req_on[i][j]]
             local_req_off = local_req_off + [req_off[i][j]]
 
@@ -238,8 +260,18 @@ def getData(locationName):
                 tmp_req_off = tmp_req_off + [[i, local_req_off[i][j]]]
 
     local_req_off = tmp_req_off
+    
+    tmp_must_off = []
+    for i in range(len(local_must_off)):
+        for j in range(len(local_must_off[i])):
+            data = local_must_off[i][j]
+            if (data != []):
+                tmp_must_off = tmp_must_off + [[i, local_must_off[i][j]]]
+
+    local_must_off = tmp_must_off
 
     ######################################
+    days_must_off = local_must_off
     days_req_off = local_req_off
     days_req_on = local_req_on
     ######################################
@@ -265,8 +297,20 @@ def getData(locationName):
         tmp_req_off = tmp_req_off + tmp_list
     #print("\ntmp_req_on = " + str(tmp_req_on))
     local_req_off = tmp_req_off
+    
+    tmp_must_off = []
+    for i in local_must_off:
+        base = i
+        tmp_list = []
+        #print (i)
+        for j in range(0, 24):
+            tmp_list = tmp_list + [base + [j]]
+        tmp_must_off = tmp_must_off + tmp_list
+    #print("\ntmp_req_on = " + str(tmp_req_on))
+    local_must_off = tmp_must_off
 
     ######################################
+    hourly_must_off = local_must_off
     hourly_req_off = local_req_off
     hourly_req_on = local_req_on
     ######################################
@@ -286,7 +330,7 @@ def getData(locationName):
     #
     # print("\nshift_len = " + str(local_shift_len) + "\n")
 
-    return local_people, local_shift_len, local_hours_rem, local_req_on, local_req_off, days_req_on, days_req_off
+    return local_people, local_shift_len, local_hours_rem, num_days, local_req_on, local_req_off, local_must_off, days_req_on, days_req_off, days_must_off
 
 def Diff(li1, li2):
 
