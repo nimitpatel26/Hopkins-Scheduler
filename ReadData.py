@@ -102,7 +102,11 @@ def setupData():
     for i in main_data['people']:
         personTypeIndex = person_types.index(i[1])
         people[personTypeIndex] = people[personTypeIndex] + [i[0]]
-        hours_req[personTypeIndex] = hours_req[personTypeIndex] + [int(main_data['personTypes'][personTypeIndex][1])]
+        tmp_range = main_data['personTypes'][personTypeIndex][1].split('-')
+        if len(tmp_range) == 2:
+            hours_req[personTypeIndex] = hours_req[personTypeIndex] + [[int(tmp_range[0]), int(tmp_range[1])]]
+        else:
+            hours_req[personTypeIndex] = hours_req[personTypeIndex] + [[int(tmp_range[0]), int(tmp_range[0])]]
         hours_wrk[personTypeIndex] = hours_wrk[personTypeIndex] + [int(i[2])]
 
 
@@ -234,7 +238,7 @@ def getData(locationName):
 
             local_hours_req = local_hours_req + [[hours_req[i][j]]]
             local_hours_wrk = local_hours_wrk + [[hours_wrk[i][j]]]
-            local_hours_rem = local_hours_rem + [[hours_rem[i][j], hours_rem[i][j]]]
+            local_hours_rem = local_hours_rem + [[hours_rem[i][j][0], hours_rem[i][j][1]]]
             local_shift_len = local_shift_len + [shift_len[i]]
 
             local_must_off = local_must_off + [must_off[i][j]]
@@ -270,12 +274,6 @@ def getData(locationName):
 
     local_must_off = tmp_must_off
 
-    ######################################
-    days_must_off = local_must_off
-    days_req_off = local_req_off
-    days_req_on = local_req_on
-    ######################################
-
     tmp_req_on = []
     for i in local_req_on:
         base = i
@@ -309,13 +307,6 @@ def getData(locationName):
     #print("\ntmp_req_on = " + str(tmp_req_on))
     local_must_off = tmp_must_off
 
-    ######################################
-    hourly_must_off = local_must_off
-    hourly_req_off = local_req_off
-    hourly_req_on = local_req_on
-    ######################################
-
-
     # print("\nreq_on: = " + str(local_req_on))
     # print("\nreq_off: = " + str(local_req_off))
     # print("\n\n---------------------------")
@@ -330,13 +321,13 @@ def getData(locationName):
     #
     # print("\nshift_len = " + str(local_shift_len) + "\n")
 
-    return local_people, local_shift_len, local_hours_rem, num_days, local_req_on, local_req_off, local_must_off, days_req_on, days_req_off, days_must_off
+    return local_people, local_shift_len, local_hours_rem, num_days, local_req_on, local_req_off, local_must_off
 
 def Diff(li1, li2):
 
     tmp = []
     for i in range(len(li1)):
-        tmp = tmp + [li1[i] - li2[i]]
+        tmp = tmp + [[li1[i][0] - li2[i], li1[i][1] - li2[i]]]
     return tmp
 
 def findIndexes(name):

@@ -160,5 +160,35 @@ $('document').ready(function() {
 			$('#shiftTypes .row:last-child .dates').val(settingsObj.shiftTypes[i][2]);
 			$('#shiftTypes .row:last-child .first').trigger('change');
 		}
+        
+        for(var key in settingsObj.mustOff){
+            if(settingsObj.mustOff[key].length > 0){
+                $('#constraints .row:last-child .constraintPerson').val(key);
+                $('#constraints .row:last-child .constraintDate').val(settingsObj.mustOff[key]);
+                $('#constraints .row:last-child .onoff').val('Scheduled off');
+                $('#constraints .row:last-child .first').trigger('change');
+            }
+        }
+        
+        for(var key in settingsObj.requestOff){
+            if(settingsObj.requestOff[key].length > 0){
+                $('#constraints .row:last-child .constraintPerson').val(key);
+                $('#constraints .row:last-child .constraintDate').val(settingsObj.requestOff[key]);
+                $('#constraints .row:last-child .onoff').val('Requests not to work');
+                $('#constraints .row:last-child .first').trigger('change');
+            }
+        }
+        
+        for(var key in settingsObj.requestOn){
+            if(settingsObj.requestOn[key].length > 0){
+                $('#constraints .row:last-child .constraintPerson').val(key);
+                $('#constraints .row:last-child .constraintDate').val(settingsObj.requestOn[key]);
+                $('#constraints .row:last-child .onoff').val('Requests to work');
+                $('#constraints .row:last-child .first').trigger('change');
+            }
+        }
+        
+        $('#numDays .row:last-child .numDays').val(settingsObj.numDays);
+        $('#numDays .row:last-child .numDays').trigger('change');
 	});
 });

@@ -75,7 +75,7 @@ def main():
         print("\n--------------------")
         print(location)
         print("--------------------\n")
-        nurse_names, nurses, nurse_req_hours, num_days, requested_on, requested_off, must_off, requested_on_days, requested_off_days, must_off_days = ReadData.getData(location)
+        nurse_names, nurses, nurse_req_hours, num_days, requested_on, requested_off, must_off = ReadData.getData(location)
         print("nurse_names = " + str(nurse_names))
         print("nurses = " + str(nurses))
         print("nurse_req_hours = " + str(nurse_req_hours))
