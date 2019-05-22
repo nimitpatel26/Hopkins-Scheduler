@@ -156,15 +156,23 @@ def main():
 
                 for smaller_block in range(block - 1):
                     hours_imp = []
-                    for i in range(smaller_block + 1):
-                        hours_imp.append(tuple([n, i // num_hours, i % num_hours]))
-                    model.Add(sum(shifts[i] for i in hours_imp) == smaller_block + 1).OnlyEnforceIf(shifts[hours_imp[smaller_block]])
-
+                    one_out = []
+                    for i in range(smaller_block + 2):
+                        if i != smaller_block + 1:
+                            hours_imp.append(tuple([n, i // num_hours, i % num_hours]))
+                        else:
+                            one_out = tuple([n, i // num_hours, i % num_hours])
+                    model.Add(sum(shifts[i] for i in hours_imp) == smaller_block + 1).OnlyEnforceIf(shifts[hours_imp[smaller_block]]).OnlyEnforceIf(shifts[one_out].Not())
+                    
                 for smaller_block in range(num_days*num_hours - block + 1, num_days*num_hours):
                     hours_imp = []
-                    for i in range(smaller_block, num_days*num_hours):
-                        hours_imp.append(tuple([n, i // num_hours, i % num_hours]))
-                    model.Add(sum(shifts[i] for i in hours_imp) == (num_days*num_hours - smaller_block)).OnlyEnforceIf(shifts[hours_imp[0]])
+                    one_out = []
+                    for i in range(smaller_block - 1, num_days*num_hours):
+                        if i != smaller_block - 1:
+                            hours_imp.append(tuple([n, i // num_hours, i % num_hours]))
+                        else:
+                            one_out = tuple([n, i // num_hours, i % num_hours])
+                    model.Add(sum(shifts[i] for i in hours_imp) == (num_days*num_hours - smaller_block)).OnlyEnforceIf(shifts[hours_imp[0]]).OnlyEnforceIf(shifts[one_out].Not())
 
             else:
                 for l in range(num_days*num_hours - 1):
